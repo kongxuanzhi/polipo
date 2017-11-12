@@ -1,3 +1,7 @@
+1. git分支记录阅读记录和重构记录
+2. 尽可能的将代码跑起来
+3. 写readme
+4. 目标：拥有两天看懂一份源代码的能力
 
 c语言中的宏定义中#号和##号和&符号的作用   --> config.h : 58
 http://blog.chinaunix.net/uid-27666459-id-3772549.html
@@ -46,3 +50,6 @@ typedef struct _ConfigVariable {
     struct _ConfigVariable *next;  是个单链表元素
 } ConfigVariableRec, *ConfigVariablePtr;
 ```
+
+4. 语法：
+  1. value = strtol(buf + offset, &p, 0);  [将字符串转化为长整型](http://www.jb51.net/article/71463.htm)

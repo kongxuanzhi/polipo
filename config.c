@@ -468,7 +468,7 @@ parseInt(char *buf, int offset, int *value_return)
     char *p;
     int value;
 
-    value = strtol(buf + offset, &p, 0);
+    value = strtol(buf + offset, &p, 0);  //http://www.jb51.net/article/71463.htm
     if(p <= buf + offset)
         return -1;
 
@@ -596,7 +596,7 @@ parseAtom(char *buf, int offset, AtomPtr *value_return, int insensitive)
     *value_return = atom;
     return j;
 }
-
+//23d12h34m 转化为s
 static int
 parseTime(char *line, int i, int *value_return)
 {
@@ -604,7 +604,7 @@ parseTime(char *line, int i, int *value_return)
     while(1) {
         if(!digit(line[i]))
             break;
-        w = atoi(line + i);
+        w = atoi(line + i);  //atoi()：将字符串转换为整型值。
         while(digit(line[i])) i++;
         switch(line[i]) {
         case 'd': v += w * 24 * 3600; i++; break;
@@ -619,6 +619,8 @@ parseTime(char *line, int i, int *value_return)
     return i;
 }
 
+//lineno: 行号
+// set： 在local.c 中为1， 其他的调用为0
 int
 parseConfigLine(char *line, char *filename, int lineno, int set)
 {
@@ -633,7 +635,7 @@ parseConfigLine(char *line, char *filename, int lineno, int set)
     IntListPtr ilv;
 
     i = skipWhitespace(line, 0);
-    if(line[i] == '\n' || line[i] == '\0' || line[i] == '#')
+    if(line[i] == '\n' || line[i] == '\0' || line[i] == '#') // 跳过空行和注释
         return 0;
 
     x0 = i;
@@ -642,17 +644,16 @@ parseConfigLine(char *line, char *filename, int lineno, int set)
     x1 = i;
 
     i = skipWhitespace(line, i);
-    if(line[i] != '=') {
+    if(line[i++] != '=') {
         goto syntax;
     }
-    i++;
     i = skipWhitespace(line, i);
 
     name = internAtomN(line + x0, x1 - x0);
     var = findConfigVariable(name);
     releaseAtom(name);
 
-    if(set && var->setter == NULL)
+    if(set && var->setter == NULL) // 如果定义set，一定要定义var->setter
         return -2;
  
     if(var == NULL) {
@@ -668,7 +669,7 @@ parseConfigLine(char *line, char *filename, int lineno, int set)
     i = skipWhitespace(line, i);
     switch(var->type) {
     case CONFIG_INT: case CONFIG_OCTAL: case CONFIG_HEX:
-        i = parseInt(line, i, &iv);
+        i = parseInt(line, i, &iv); //line + offset
         if(i < 0) goto syntax;
         if(set)
             var->setter(var, &iv);
@@ -830,7 +831,7 @@ parseConfigFile(AtomPtr filename)
     lineno = 1;
     while(1) {
         char *s;
-        s = fgets(buf, 512, f);
+        s = fgets(buf, 512, f); //读取一行
         if(s == NULL) {
             fclose(f);
             return 1;
